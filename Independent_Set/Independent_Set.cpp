@@ -91,10 +91,10 @@ class algR0 {
 
 int main()
 {
-	for (size_t index = 30; index < 70; index += 10) {
-		string filename = "g" + to_string(index);
-		ofstream ofs("C:\\Users\\biu\\Desktop\\lab3data\\output\\" + filename + ".out");
-		auto G = graph("C:\\Users\\biu\\Desktop\\lab3data\\" + filename + ".in");
+	for (size_t index = 30; index < 40; index += 10) {
+		string filename = "g" + to_string(index) + ".txt";
+		ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\" + filename);
+		auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
 		algR0 r(G);
 		vector<pair<size_t, bool> > V;
 
