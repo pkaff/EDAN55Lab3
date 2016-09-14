@@ -11,6 +11,57 @@
 
 using namespace std;
 
+class myVec {
+private:
+	vector<pair<size_t, bool>> vec;
+public:
+	size_t size;
+
+	myVec() : size(0) {
+
+	}
+	myVec(myVec& other) {
+		vec = other.vec;
+		size = other.size;
+
+	}
+
+	pair<size_t, bool> get_pair(size_t i) {
+		return vec[i];
+	}
+
+	void set(size_t i, bool b) {
+		if (vec[i].second != b) {
+			if (b) {
+				++size;
+			}
+			else {
+				--size;
+			}
+			vec[i].second = b;
+		}
+	}
+
+	void push_back(pair<size_t, bool> p) {
+		if (p.second) {
+			++size;
+		}
+		vec.push_back(p);
+	}
+
+	size_t max_size() {
+		return vec.size();
+	}
+
+	bool peek(size_t i) {
+		return vec[i].second;
+	}
+
+	size_t get(size_t i) {
+		return vec[i].first;
+	}
+};
+
 vector<vector<size_t> > graph(string filename) {
 	ifstream ifs(filename);
 
@@ -43,42 +94,37 @@ class algR0 {
 		}
 
 		//main algorithm
-		size_t R0(vector<pair<size_t, bool> >& V) {
+		size_t R0(myVec& V) {
 			++iterations;
 			//case 1.
-			bool end = true;
-			for (const auto& it : V) {
-				if (it.second == true) {
-					end = false;
-					break;
-				}
-			}
-			if (end)
+			if (V.size == 0) {
 				return 0;
+			}
 
 			//case 2, keep track of vertex with maximum degree for possible case 3.
 			size_t maxDeg = 0;
 			size_t u;
 
-			for (auto& i : V) {
-				if (i.second) {
-					size_t deg = graph[i.first].size();
+			for (size_t i = 0; i < V.max_size(); ++i) {
+				if (V.peek(i)) {
+					size_t deg = graph[V.get(i)].size();
 					if (deg == 0) {
-						i.second = false;
+						V.set(i, false);
+						//p.second = false;
 						return 1 + R0(V);
 					}
 					if (deg > maxDeg) {
 						maxDeg = deg;
-						u = i.first;
+						u = V.get(i);
 					}
 				}
 			}
 
 			//case 3.
-			V[u].second = false;
-			vector<pair<size_t, bool> > V2(V);
+			V.set(u, false);
+			myVec V2(V);
 			for (const size_t& v : graph[u]) {
-				V2[v].second = false;
+				V2.set(v, false);
 			}
 			return max(1 + R0(V2), R0(V));
 		}
@@ -91,12 +137,12 @@ class algR0 {
 
 int main()
 {
-	for (size_t index = 30; index < 40; index += 10) {
+	for (size_t index = 40; index < 50; index += 10) {
 		string filename = "g" + to_string(index) + ".txt";
 		ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\" + filename);
 		auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
 		algR0 r(G);
-		vector<pair<size_t, bool> > V;
+		myVec V;
 
 		for (size_t i = 0; i < G.size(); i++)
 		{
