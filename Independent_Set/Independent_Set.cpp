@@ -2,12 +2,12 @@
 //
 
 #include "stdafx.h"
-#include <vector>
-#include <list>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-#include <iostream>
+#include<vector>
+#include<list>
+#include<fstream>
+#include<sstream>
+#include<algorithm>
+#include<iostream>
 
 using namespace std;
 
@@ -35,69 +35,78 @@ vector<vector<size_t> > graph(string filename) {
 }
 
 class algR0 {
-public:
-	size_t iterations;
+	public:
+		size_t iterations;
 
-	algR0(vector<vector<size_t> > G) : graph(G), iterations(0) {
-
-	}
-
-	//main algorithm
-	size_t R0(list<size_t> V) {
-		++iterations;
-		//case 1.
-		if (V.size() == 0) {
-			return 0;
+		algR0(vector<vector<size_t> > G) : graph(G), iterations(0) { 
+		
 		}
 
-		//case 2, keep track of vertex with maximum degree for possible case 3.
-		size_t maxDeg = 0;
-		size_t u;
-
-		for (auto i = V.begin(); i != V.end(); ++i) {
-			size_t deg = graph[*i].size();
-			if (deg == 0) {
-				V.erase(i);
-
-				return 1 + R0(V);
+		//main algorithm
+		size_t R0(vector<pair<size_t, bool> >& V) {
+			++iterations;
+			//case 1.
+			bool end = true;
+			for (const auto& it : V) {
+				if (it.second == true) {
+					end = false;
+					break;
+				}
 			}
-			if (deg > maxDeg) {
-				maxDeg = deg;
-				u = *i;
+			if (end)
+				return 0;
+
+			//case 2, keep track of vertex with maximum degree for possible case 3.
+			size_t maxDeg = 0;
+			size_t u;
+
+			for (auto& i : V) {
+				if (i.second) {
+					size_t deg = graph[i.first].size();
+					if (deg == 0) {
+						i.second = false;
+						return 1 + R0(V);
+					}
+					if (deg > maxDeg) {
+						maxDeg = deg;
+						u = i.first;
+					}
+				}
 			}
-		}
 
-		//case 3.
-		V.remove(u);
-		list<size_t> V2(V);
-		//Think of a better way to do this
-		for (const size_t& v : graph[u]) {
-			V2.remove(v);
+			//case 3.
+			V[u].second = false;
+			vector<pair<size_t, bool> > V2(V);
+			for (const size_t& v : graph[u]) {
+				V2[v].second = false;
+			}
+			return max(1 + R0(V2), R0(V));
 		}
-		return max(1 + R0(V2), R0(V));
-	}
-
-private:
-	vector<vector<size_t> > graph;
+		
+	private:
+		vector<vector<size_t> > graph;
 };
 
 
 
 int main()
 {
-	string filename = "g30.txt";
-	ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\" + filename);
-	auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
-	algR0 r(G);
-	list<size_t> V;
+	for (size_t index = 30; index < 70; index += 10) {
+		string filename = "g" + to_string(index);
+		ofstream ofs("C:\\Users\\biu\\Desktop\\lab3data\\output\\" + filename + ".out");
+		auto G = graph("C:\\Users\\biu\\Desktop\\lab3data\\" + filename + ".in");
+		algR0 r(G);
+		vector<pair<size_t, bool> > V;
 
-	for (size_t i = 0; i < G.size(); i++)
-	{
-		V.push_back(i);
+		for (size_t i = 0; i < G.size(); i++)
+		{
+			V.push_back(make_pair(i, true));
+		}
+		size_t maxIS = r.R0(V);
+		cout << maxIS << r.iterations << endl;
+		ofs << "maximum independent set: " << maxIS << ", number of iterations: " << r.iterations << endl;
+		ofs.close();
 	}
-	size_t maxIS = r.R0(V);
-	cout << maxIS << r.iterations << endl;
-	ofs << "maximum independent set: " << maxIS << ", number of iterations: " << r.iterations << endl;
 	return 0;
 }
 
