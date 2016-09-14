@@ -2,12 +2,12 @@
 //
 
 #include "stdafx.h"
-#include<vector>
-#include<list>
-#include<fstream>
-#include<sstream>
-#include<algorithm>
-#include<iostream>
+#include <vector>
+#include <list>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -58,6 +58,7 @@ public:
 			size_t deg = graph[*i].size();
 			if (deg == 0) {
 				V.erase(i);
+
 				return 1 + R0(V);
 			}
 			if (deg > maxDeg) {
@@ -84,9 +85,9 @@ private:
 
 int main()
 {
-	string filename = "g30";
-	ofstream ofs("C:\\Users\\biu\\Desktop\\lab3data\\output\\" + filename + ".out");
-	auto G = graph("C:\\Users\\biu\\Desktop\\lab3data\\" + filename + ".in");
+	string filename = "g30.txt";
+	ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\" + filename);
+	auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
 	algR0 r(G);
 	list<size_t> V;
 
