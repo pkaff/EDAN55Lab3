@@ -1,6 +1,7 @@
 // IndependentSet.cpp : Defines the entry point for the console application.
 //
 
+#include "stdafx.h"
 #include <vector>
 #include <list>
 #include <fstream>
@@ -192,8 +193,8 @@ int main()
   //run r0
   for (size_t index = 30; index < 70; index += 10) {
     string filename = "g" + to_string(index) + ".txt";
-    ofstream ofs("/h/d9/q/tpi11dod/Documents/Avancerade Algoritmer/EDAN55Lab3/IO_Data/output/r0/" + filename);
-    auto G = graph("/h/d9/q/tpi11dod/Documents/Avancerade Algoritmer/EDAN55Lab3/IO_Data/input/" + filename);
+    ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\r0\\" + filename);
+    auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
     algR r(G);
     myVec V;
 
@@ -208,9 +209,9 @@ int main()
   }
   //run r1
   for (size_t index = 30; index < 110; index += 10) {
-    string filename = "g" + to_string(index) + ".txt";
-    ofstream ofs("/h/d9/q/tpi11dod/Documents/Avancerade Algoritmer/EDAN55Lab3/IO_Data/output/r1/" + filename);
-    auto G = graph("/h/d9/q/tpi11dod/Documents/Avancerade Algoritmer/EDAN55Lab3/IO_Data/input/" + filename);
+	  string filename = "g" + to_string(index) + ".txt";
+	  ofstream ofs("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\output\\r1\\" + filename);
+	  auto G = graph("C:\\Users\\biz\\Documents\\Visual Studio 2015\\Projects\\Independent_Set\\IO_Data\\input\\" + filename);
     algR r(G);
     myVec V;
 
