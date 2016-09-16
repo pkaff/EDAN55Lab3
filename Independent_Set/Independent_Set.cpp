@@ -93,12 +93,12 @@ class algR {
 public:
 	size_t iterations;
 
-	algR(vector<vector<size_t> > G) : graph(G), iterations(0) {
+	algR(vector<vector<size_t> > G) : iterations(0) {
 
 	}
 
 	//main algorithm
-	size_t R0(myVec& V) {
+	size_t R0(myVec& V, vector<vector<size_t> >& graph) {
 		++iterations;
 		//case 1.
 		if (V.size == 0) {
@@ -119,7 +119,7 @@ public:
 				}
 				if (deg == 0) {
 					V.set(i, false);
-					return 1 + R0(V);
+					return 1 + R0(V, graph);
 				}
 				if (deg > maxDeg) {
 					maxDeg = deg;
@@ -134,11 +134,11 @@ public:
 		for (const size_t& v : graph[u]) {
 			V2.set(v, false);
 		}
-		return max(1 + R0(V2), R0(V));
+		return max(1 + R0(V2, graph), R0(V, graph));
 	}
 
 	//main algorithm
-	size_t R1(myVec& V) {
+	size_t R1(myVec& V, vector<vector<size_t> >& graph) {
 		++iterations;
 		//case 1.
 		if (V.size == 0) {
@@ -159,14 +159,14 @@ public:
 				}
 				if (deg == 0) {
 					V.set(i, false);
-					return 1 + R1(V);
+					return 1 + R1(V, graph);
 				}
 				if (deg == 1) {
 					V.set(V.get(i), false);
 					for (const size_t& v : graph[V.get(i)]) {
 						V.set(v, false);
 					}
-					return 1 + R1(V);
+					return 1 + R1(V, graph);
 				}
 				if (deg > maxDeg) {
 					maxDeg = deg;
@@ -181,11 +181,11 @@ public:
 		for (const size_t& v : graph[u]) {
 			V2.set(v, false);
 		}
-		return max(1 + R1(V2), R1(V));
+		return max(1 + R1(V2, graph), R1(V, graph));
 	}
 
 	//main algorithm
-	size_t R2(myVec& V) {
+	size_t R2(myVec& V, vector<vector<size_t> >& graph) {
 		++iterations;
 		//case 1.
 		if (V.size == 0) {
@@ -217,7 +217,7 @@ public:
 					//If edge between neighbours
 					for (const size_t& v : graph[V.get(neighbours.front())]) {
 						if (v == neighbours.back()) {
-							return 1 + R2(V);
+							return 1 + R2(V, graph);
 						}
 					}
 					//if no edge between neighbours add z
@@ -238,7 +238,7 @@ public:
 						graph[v].push_back(graph.size() - 1);
 					}
 					V.push_back(make_pair(graph.size() - 1, true));
-					return 1 + R2(V);
+					return 1 + R2(V, graph);
 				}
 			}
 		}
@@ -257,14 +257,14 @@ public:
 				}
 				if (deg == 0) {
 					V.set(i, false);
-					return 1 + R2(V);
+					return 1 + R2(V, graph);
 				}
 				if (deg == 1) {
 					V.set(V.get(i), false);
 					for (const size_t& v : graph[V.get(i)]) {
 						V.set(v, false);
 					}
-					return 1 + R2(V);
+					return 1 + R2(V, graph);
 				}
 				if (deg > maxDeg) {
 					maxDeg = deg;
@@ -276,14 +276,13 @@ public:
 		//case 3.
 		V.set(u, false);
 		myVec V2(V);
+		vector<vector<size_t> > graph2(graph);
 		for (const size_t& v : graph[u]) {
 			V2.set(v, false);
 		}
-		return max(1 + R2(V2), R2(V));
+		return max(1 + R2(V2, graph), R2(V, graph2));
 	}
 
-private:
-	vector<vector<size_t> > graph;
 };
 
 
@@ -303,7 +302,7 @@ int main()
 		{
 			V.push_back(make_pair(i, true));
 		}
-		size_t maxIS = r.R0(V);
+		size_t maxIS = r.R0(V, G);
 		cout << maxIS << " " << r.iterations << endl;
 		ofs << "maximum independent set: " << maxIS << ", number of iterations: " << r.iterations << endl;
 		ofs.close();
@@ -322,7 +321,7 @@ int main()
 		{
 			V.push_back(make_pair(i, true));
 		}
-		size_t maxIS = r.R1(V);
+		size_t maxIS = r.R1(V, G);
 		cout << maxIS << " " << r.iterations << endl;
 		ofs << "maximum independent set: " << maxIS << ", number of iterations: " << r.iterations << endl;
 		ofs.close();
@@ -341,7 +340,7 @@ int main()
 		{
 			V.push_back(make_pair(i, true));
 		}
-		size_t maxIS = r.R2(V);
+		size_t maxIS = r.R2(V, G);
 		cout << maxIS << " " << r.iterations << endl;
 		ofs << "maximum independent set: " << maxIS << ", number of iterations: " << r.iterations << endl;
 		ofs.close();

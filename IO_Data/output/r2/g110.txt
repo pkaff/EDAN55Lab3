@@ -1,0 +1,1 @@
+maximum independent set: 29, number of iterations: 3054843
